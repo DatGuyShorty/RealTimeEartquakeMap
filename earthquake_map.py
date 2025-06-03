@@ -1,21 +1,22 @@
 import folium
 import requests
 from folium.plugins import MarkerCluster
+from folium.plugins import HeatMap
+from folium.plugins import MiniMap
 from datetime import datetime
 
 # Get real-time earthquake data from USGS (past day)
-url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson"
+url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson"
 
 response = requests.get(url)
 data = response.json()
 #print(data)
 
-# create map centered on the world 
+# create map
 map = folium.Map(location=[48.291697, 17.755778], zoom_start=5, tiles="CartoDB positron")
 
-
 # adding marker cluster
-marker_cluster = MarkerCluster().add_to(map)
+marker_cluster = MarkerCluster(name="Earthquake Marker Cluster")
 # looping trough earthquakes
 for feature in data['features']:
     cords = feature['geometry']['coordinates'] #[long, lat, depth]
@@ -43,6 +44,28 @@ for feature in data['features']:
         fill_color=color,
         fill_opacity=0.7
     ).add_to(marker_cluster)
+
+# Prepare the heatmap data: [lat, lon, weight (magnitude)]
+heat_data = []
+
+for feature in data["features"]:
+    coords = feature["geometry"]["coordinates"]  # [lon, lat, depth]
+    magnitude = feature["properties"]["mag"] or 0
+    lat, lon = coords[1], coords[0]
+    
+    # Add point: stronger quakes have more "heat"
+    heat_data.append([lat, lon, magnitude])
+#Create heatmap layer
+heat_map = HeatMap(heat_data, radius=32, blur=15, min_opacity=0.4, max_zoom=8, name="Earthquake Heatmap")
+# Add the marker cluster layer
+map.add_child(marker_cluster)
+# Add the heatmap layer
+map.add_child(heat_map)
+#minimap inicialization 
+minimap = MiniMap()
+map.add_child(minimap)
+#adding layer control
+map.add_child(folium.LayerControl()) 
 
 # Save to HTML
 map.save("earthquake_map.html")
