@@ -3,6 +3,7 @@ import requests
 from folium.plugins import MarkerCluster
 from folium.plugins import HeatMap
 from folium.plugins import MiniMap
+from folium.plugins import Fullscreen
 from datetime import datetime
 
 # Get real-time earthquake data from USGS (past day)
@@ -61,12 +62,15 @@ heat_map = HeatMap(heat_data, radius=32, blur=15, min_opacity=0.4, max_zoom=8, n
 map.add_child(marker_cluster)
 # Add the heatmap layer
 map.add_child(heat_map)
-#minimap inicialization 
-minimap = MiniMap()
-map.add_child(minimap)
-#adding layer control
-map.add_child(folium.LayerControl()) 
 
+map.add_child(MiniMap())
+map.add_child(folium.LayerControl()) 
+map.add_child(Fullscreen(
+    position="topright",
+    title="Enter Fullscreen",
+    title_cancel="Exit Fullscreen",
+    force_separate_button=True,
+))
 # Save to HTML
 map.save("earthquake_map.html")
 print("Map saved as 'earthquake_map.html'")
