@@ -98,7 +98,7 @@ if __name__ == "__main__":
     m = folium.Map(
         location=[48.291697, 17.755778],
         zoom_start=5,
-        tiles="CartoDB positron"
+        tiles="Cartodb dark_matter"
     )
 
     # Define color‐mapping functions for each layer
