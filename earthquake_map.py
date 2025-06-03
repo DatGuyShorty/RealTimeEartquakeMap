@@ -71,6 +71,8 @@ map.add_child(Fullscreen(
     title_cancel="Exit Fullscreen",
     force_separate_button=True,
 ))
+map.add_child(folium.plugins.LocateControl()) 
+map.add_child(folium.plugins.Geocoder(position="bottomleft"))
 # Save to HTML
 map.save("earthquake_map.html")
 print("Map saved as 'earthquake_map.html'")
