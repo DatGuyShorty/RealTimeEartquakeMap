@@ -44,8 +44,4 @@ Earthquake data is retrieved from the [USGS Earthquake Hazards Program](https://
 
 ## Example
 
-![screenshot](screenshot.png) <!-- Add a screenshot if available -->
-
-## License
-
-MIT License. See [LICENSE](LICENSE) for details.
+![screenshot](screenshot.png)
